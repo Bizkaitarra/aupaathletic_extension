@@ -1,0 +1,28 @@
+body {
+    width: 300px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+#wysiwyg-toolbar {
+    margin-bottom: 5px;
+}
+
+#wysiwyg-editor {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 150px;
+}
+
+button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

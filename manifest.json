@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Aupa Athletic Helper",
+  "version": "1.0",
+  "description": "Permite que la creación de posts en Aupa Athletic sea más sencilla.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://www.aupaathletic.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "256": "icons/icon256.png"
+    }
+  }
+}
