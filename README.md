@@ -16,7 +16,7 @@ La extensión se instala en el navegador Google Chrome. Está pendiente de ser a
 
 Para instalar la extensión, sigue los siguientes pasos:
 
-* Descarga el archivo comprimido de la extensión
+* Descarga el archivo comprimido de la extensión desde [aquí](https://github.com/Bizkaitarra/aupaathletic_extension/archive/refs/heads/main.zip)
 * En Chrome ir a chrome://extensions/
 * Hacer click en "Cargar descomprimida" y seleccionar la carpeta de la extensión. (Simplemente cuando estés en la carpeta, dentro, darle a abrir y queda seleccionada)
 
