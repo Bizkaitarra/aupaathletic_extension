@@ -15,10 +15,11 @@ try {
         editorContainer.style.border = '1px solid #ccc';
         editorContainer.style.padding = '10px';
         editorContainer.style.minHeight = '150px';
+        editorContainer.className = 'form-control';
         textarea.parentNode.insertBefore(editorContainer, textarea.nextSibling);
 
         // Copiar el contenido del textarea original al editor WYSIWYG
-        editorContainer.innerHTML = textarea.value;
+        editorContainer.innerHTML = convertForumFormatToHtml(textarea.value);
 
         // Crear barra de herramientas
         const toolbar = document.createElement('div');
@@ -54,10 +55,12 @@ try {
         toolbar.appendChild(linkButton);
 
         // Actualizar el contenido del textarea original al enviar el formulario
+
         postForm.addEventListener('submit', (event) => {
             const htmlContent = editorContainer.innerHTML;
             textarea.value = convertHtmlToForumFormat(htmlContent);
         });
+
     } else {
         console.log('Formulario o textarea no encontrados');
     }
@@ -70,8 +73,20 @@ function convertHtmlToForumFormat(html) {
         .replace(/<b>(.*?)<\/b>/g, '[b]$1[/b]')
         .replace(/<i>(.*?)<\/i>/g, '[i]$1[/i]')
         .replace(/<a href="(.*?)">(.*?)<\/a>/g, '[web] $2 [separador] $1 [/web]')
-        .replace(/<br>/g, '\n');
+        .replace(/<br>/g, '\n')
+        .replace(/<div>/g, '\n')
+        .replace(/<\/div>/g, '');
 }
+
+function convertForumFormatToHtml(forumText) {
+    return forumText
+        .replace(/\[b\](.*?)\[\/b\]/g, '<b>$1</b>')
+        .replace(/\[i\](.*?)\[\/i\]/g, '<i>$1</i>')
+        .replace(/\[web\] (.*?) \[separador\] (.*?) \[\/web\]/g, '<a href="$2">$1</a>')
+        .replace(/\n/g, '<br>')
+        .replace(/<\/br>/g, '<div>').replace(/<\/br>/g, '</div>');
+}
+
 
 function toggleBold() {
     const selection = window.getSelection();
