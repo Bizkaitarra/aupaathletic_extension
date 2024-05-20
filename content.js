@@ -1,13 +1,18 @@
-console.log('cargando extensión 1');
-
-console.log('cargando extensión 2');
 try {
     const postForm = document.querySelector('form[name="frm"]');
     const textarea = postForm ? postForm.querySelector('#Mensaje') : null;
     if (postForm && textarea) {
-        console.log('Formulario y textarea encontrados');
+
+        const mainTable = postForm.querySelector('table');
+        if (mainTable) {
+            mainTable.children[0].children[0].children[1].style.display = 'none';
+        } else {
+            console.log('No se encontró la tabla principal dentro del formulario');
+        }
+
+
         // Ocultar el textarea original y crear un nuevo contenedor para el editor
-        //textarea.style.display = 'none';
+        textarea.style.display = 'none';
 
         const editorContainer = document.createElement('div');
         editorContainer.id = 'wysiwyg-editor';
@@ -23,6 +28,8 @@ try {
 
         // Crear barra de herramientas
         const toolbar = document.createElement('div');
+        toolbar.className = 'toolbar';
+        toolbar.id = 'ce-toolbar';
         toolbar.style.marginBottom = '10px';
         textarea.parentNode.insertBefore(toolbar, editorContainer);
 
@@ -67,6 +74,7 @@ try {
 
 // Crear contenedor para los botones de emoji
         const emojiButtonsContainer = document.createElement('div');
+        emojiButtonsContainer.id = 'emoji-buttons-container';
         emojiButtonsContainer.style.marginBottom = '10px'; // Ajusta el margen según sea necesario
 
 // Arrays de emojis y rutas de imágenes
@@ -100,6 +108,48 @@ try {
             const htmlContent = editorContainer.innerHTML;
             textarea.value = convertHtmlToForumFormat(htmlContent);
         });
+
+        // Añadir estilos CSS al documento
+        const style = document.createElement('style');
+        style.textContent = `
+            #ce-toolbar {
+                margin-bottom: 10px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            #ce-toolbar button {
+                background-color: #f0f0f0;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 5px 10px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            #ce-toolbar button:hover {
+                background-color: #e0e0e0;
+            }
+            #ce-toolbar button img {
+                width: 10px;
+                height: 10px;
+            }
+            #ce-toolbar button b,
+            #ce-toolbar button i,
+            #ce-toolbar button u {
+                font-size: 16px;
+            }
+            #ce-toolbar button:first-of-type {
+                margin-left: 10px;
+            }
+            #emoji-buttons-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+        `;
+        document.head.appendChild(style);
 
     } else {
         console.log('Formulario o textarea no encontrados');
