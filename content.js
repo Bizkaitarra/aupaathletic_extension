@@ -274,42 +274,22 @@ function addLink() {
     const range = selection.getRangeAt(0);
     const selectedText = range.toString();
 
-    let url = prompt('Enter the link URL:');
+    let url = prompt('Ingrese la URL del enlace:');
     if (!url) return;
 
-    // Asegurarse de que la URL tenga el prefijo https:// si no es un correo electrónico
+    // Asegurarse de que la URL tenga el prefijo https:// si no es un correo electrónico o una imagen
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
         if (isValidEmail(url)) {
-            const emailNode = document.createTextNode(`[email] ${url} [/email]`);
-            range.deleteContents();
-            range.insertNode(emailNode);
-            // Re-seleccionar el texto
-            selection.removeAllRanges();
-            selection.addRange(range);
-            return;
-        } else if (isValidImageUrl(url)) {
-            const imgNode = document.createTextNode(`[img] ${url} [/img]`);
-            range.deleteContents();
-            range.insertNode(imgNode);
-            // Re-seleccionar el texto
-            selection.removeAllRanges();
-            selection.addRange(range);
-            return;
-        } else {
+            url = 'mailto:' + url;
+        } else if (!isValidImageUrl(url)) {
             url = 'https://' + url;
         }
     }
 
-    let linkText = selectedText;
-    if (!linkText) {
-        linkText = url;
-    } else if (!isValidUrl(linkText)) {
-        linkText = url + ' [separador] ' + linkText;
-    } else {
-        linkText = linkText + ' [separador] ' + url;
-    }
+    // Si no hay texto seleccionado, usamos la URL como texto del enlace
+    let linkText = selectedText || url;
 
-    const linkNode = document.createTextNode(`[web] ${linkText} [/web]`);
+    const linkNode = document.createTextNode(`[web] ${url} [separador] ${linkText} [/web]`);
     range.deleteContents();
     range.insertNode(linkNode);
 
@@ -327,6 +307,12 @@ function isValidImageUrl(url) {
     const imgExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp'];
     return imgExtensions.some(ext => url.toLowerCase().endsWith(ext));
 }
+
+function isValidUrl(url) {
+    const urlRegex = /^(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]$/i;
+    return urlRegex.test(url);
+}
+
 
 function addEmoji(emoji) {
     const selection = window.getSelection();
