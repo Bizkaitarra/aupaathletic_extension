@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Aupa Athletic Helper",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Permite que la creación de posts en Aupa Athletic sea más sencilla.",
   "permissions": [
     "activeTab",
@@ -10,7 +10,10 @@
   "content_scripts": [
     {
       "matches": ["*://www.aupaathletic.com/*"],
-      "js": ["content.js"],
+      "js": [
+        "content.js",
+        "lineup-process.js"
+      ],
       "run_at": "document_end"
     }
   ],
@@ -19,5 +22,11 @@
     "default_icon": {
       "256": "icons/icon256.png"
     }
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["images/campo.png"],
+      "matches": ["*://www.aupaathletic.com/*"]
+    }
+  ]
 }

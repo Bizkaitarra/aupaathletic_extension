@@ -21,8 +21,28 @@ try {
         editorContainer.style.padding = '10px';
         editorContainer.style.minHeight = '150px';
         editorContainer.className = 'form-control';
-        textarea.parentNode.insertBefore(editorContainer, textarea.nextSibling);
+        editorContainer.addEventListener('paste', (event) => {
+            const clipboardData = (event.originalEvent || event).clipboardData;
+            event.preventDefault(); // Evitar la acción predeterminada de pegar
 
+            // Obtener el texto plano pegado
+            const pastedText = clipboardData.getData('text/plain');
+
+            // Obtener la selección actual en el editor
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+
+                // Crear un nodo de texto con el texto plano
+                const textNode = document.createTextNode(pastedText);
+
+                // Insertar el nodo de texto en la selección
+                range.deleteContents();
+                range.insertNode(textNode);
+            }
+        });
+
+        textarea.parentNode.insertBefore(editorContainer, textarea.nextSibling);
         // Copiar el contenido del textarea original al editor WYSIWYG
         editorContainer.innerHTML = convertForumFormatToHtml(textarea.value);
 
@@ -52,15 +72,6 @@ try {
         };
         toolbar.appendChild(italicButton);
 
-        const linkButton = document.createElement('button');
-        linkButton.innerHTML = 'Link';
-        linkButton.onclick = (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            addLink();
-        };
-        toolbar.appendChild(linkButton);
-
         // Añadir el botón de subrayado a la barra de herramientas
         const underlineButton = document.createElement('button');
         underlineButton.innerHTML = '<u>U</u>';
@@ -70,6 +81,42 @@ try {
             toggleUnderline();
         };
         toolbar.appendChild(underlineButton);
+
+        const linkButton = document.createElement('button');
+        linkButton.innerHTML = 'Link';
+        linkButton.onclick = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            addLink();
+        };
+        toolbar.appendChild(linkButton);
+
+
+        // Crear botón de lineup en la barra de herramientas
+        const lineupButton = document.createElement('button');
+        lineupButton.innerHTML = 'Lineup'; // Cambiado el texto del botón
+        toolbar.appendChild(lineupButton);
+
+        // Agregar evento de clic al botón de lineup
+        lineupButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            // Abrir ventana modal
+            const tactic = prompt('Ingrese la táctica (por ejemplo, 4-3-3):');
+            const players = prompt('Ingrese los 11 jugadores separados por comas:');
+
+            // Generar el texto de alineación
+            const lineupText = `[lineup tactica=${tactic.replace(/\s/g, '&nbsp;')} alineacion=${players}][/lineup]`;
+
+            // Insertar el texto de alineación en el editor
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const lineupNode = document.createTextNode(lineupText);
+                range.insertNode(lineupNode);
+            }
+        });
+
 
 
 // Crear contenedor para los botones de emoji
@@ -99,7 +146,6 @@ try {
 
 // Agregar el contenedor de botones de emoji al toolbar
         toolbar.appendChild(emojiButtonsContainer);
-
 
 
         // Actualizar el contenido del textarea original al enviar el formulario
@@ -181,7 +227,6 @@ function convertForumFormatToHtml(forumText) {
 }
 
 
-
 function toggleBold() {
     const selection = window.getSelection();
     if (!selection.rangeCount) return;
@@ -209,6 +254,7 @@ function toggleBold() {
     selection.removeAllRanges();
     selection.addRange(range);
 }
+
 // Función para alternar el subrayado
 function toggleUnderline() {
     const selection = window.getSelection();
